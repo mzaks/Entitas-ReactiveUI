@@ -6,7 +6,7 @@ public class ElixirAmountBehaviour : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		Pools.pool.GetGroup(Matcher.Elixir).OnEntityAdded += (Group group, Entity entity, int index, IComponent component) => {updateText();};
+		Pools.pool.GetGroup(Matcher.Elixir).OnEntityAdded += delegate {updateText();};
 	}
 
 	void updateText(){

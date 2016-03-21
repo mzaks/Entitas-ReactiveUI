@@ -8,7 +8,7 @@ public class TimeLabelBehaviour : MonoBehaviour {
 	// Use this for initialization
 	void Awake ()
 	{
-		Pools.pool.GetGroup(Matcher.Tick).OnEntityAdded += (Group group, Entity entity, int index, IComponent component) => {updateText();};
+		Pools.pool.GetGroup(Matcher.Tick).OnEntityAdded += delegate {updateText();};
 	}
 
   	void updateText()

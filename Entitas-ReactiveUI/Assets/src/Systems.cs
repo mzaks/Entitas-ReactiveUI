@@ -8,7 +8,7 @@ public class TickUpdateSystem : IInitializeSystem, IExecuteSystem, ISetPool
 
 	public void SetPool(Pool pool){_pool = pool;}
 
-	public void Initialize(){ _pool.SetTick(0); }
+	public void Initialize(){ _pool.ReplaceTick(0); }
 
 	public void Execute()
 	{
@@ -36,7 +36,7 @@ public class ElixirProduceSystem : IReactiveSystem, ISetPool, IInitializeSystem
 
 	public void Initialize ()
 	{
-		_pool.SetElixir(0);
+		_pool.ReplaceElixir(0);
 	}
 
   	public void Execute(List<Entity> entities)

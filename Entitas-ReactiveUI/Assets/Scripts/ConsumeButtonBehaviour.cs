@@ -14,9 +14,9 @@ public class ConsumeButtonBehaviour : MonoBehaviour {
 	{
 		maxHeight = progressBox.rect.height;
 		label.text = consumptionAmmount.ToString();
-		Pools.pool.GetGroup(Matcher.Elixir).OnEntityAdded += (Group group, Entity entity, int index, IComponent component) => {updateBar();};
-		Pools.pool.GetGroup(Matcher.Pause).OnEntityAdded += (Group group, Entity entity, int index, IComponent component) => {toggleButtonState();};
-		Pools.pool.GetGroup(Matcher.Pause).OnEntityRemoved += (Group group, Entity entity, int index, IComponent component) => {toggleButtonState();};
+		Pools.pool.GetGroup(Matcher.Elixir).OnEntityAdded += delegate {updateBar();};
+		Pools.pool.GetGroup(Matcher.Pause).OnEntityAdded += delegate {toggleButtonState();};
+		Pools.pool.GetGroup(Matcher.Pause).OnEntityRemoved += delegate {toggleButtonState();};
 	}
 
 	void updateBar()

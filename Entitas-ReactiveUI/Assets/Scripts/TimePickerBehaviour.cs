@@ -6,8 +6,8 @@ public class TimePickerBehaviour : MonoBehaviour {
 
 	void Start () 
 	{
-//		Pools.pool.GetGroup(Matcher.Pause).OnEntityAdded += (Group group, Entity entity, int index, IComponent component) => {toggleState();};
-//		Pools.pool.GetGroup(Matcher.Pause).OnEntityRemoved += (Group group, Entity entity, int index, IComponent component) => {toggleState();};
+//		Pools.pool.GetGroup(Matcher.Pause).OnEntityAdded += delegate {toggleState();};
+//		Pools.pool.GetGroup(Matcher.Pause).OnEntityRemoved += delegate {toggleState();};
 //		toggleState();
 		gameObject.SetActive(false);
 	}

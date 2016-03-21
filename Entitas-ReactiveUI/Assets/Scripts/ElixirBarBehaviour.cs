@@ -8,7 +8,7 @@ public class ElixirBarBehaviour : MonoBehaviour {
 
 	void Start () {
 		maxWidth = GetComponent<RectTransform>().rect.width;
-		Pools.pool.GetGroup(Matcher.Elixir).OnEntityAdded += (Group group, Entity entity, int index, IComponent component) => {updateBar();};
+		Pools.pool.GetGroup(Matcher.Elixir).OnEntityAdded += delegate {updateBar();};
 	}
 	
 	void updateBar(){

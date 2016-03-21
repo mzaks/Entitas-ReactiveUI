@@ -13,15 +13,22 @@ public class RootSystemBehaviour : MonoBehaviour
 	// Use this for initialization
 	void Start ()
 	{
+		var logicSystems = CreateLogicSystems();
+
+		_systems = new Systems();
+		_systems.Add(logicSystems);
+		_systems.Initialize();
+	}
+
+	Systems CreateLogicSystems()
+	{
 		var pool = Pools.pool;
-		_systems = new Systems()
+		return new Systems()
 			.Add(pool.CreateSystem<TickUpdateSystem>())
 				.Add(pool.CreateSystem<ElixirProduceSystem>())
 				.Add(pool.CreateSystem<ElixirConsumeSystem>());
-
-		_systems.Initialize();
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
         _systems.Execute();
