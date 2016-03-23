@@ -8,22 +8,31 @@
 //------------------------------------------------------------------------------
 public static class ComponentIds {
     public const int Consume = 0;
-    public const int Elixir = 1;
-    public const int Pause = 2;
-    public const int Tick = 3;
+    public const int ConsumtionHistory = 1;
+    public const int Elixir = 2;
+    public const int JumpInTime = 3;
+    public const int LogicSystems = 4;
+    public const int Pause = 5;
+    public const int Tick = 6;
 
-    public const int TotalComponents = 4;
+    public const int TotalComponents = 7;
 
     public static readonly string[] componentNames = {
         "Consume",
+        "ConsumtionHistory",
         "Elixir",
+        "JumpInTime",
+        "LogicSystems",
         "Pause",
         "Tick"
     };
 
     public static readonly System.Type[] componentTypes = {
         typeof(ConsumeComponent),
+        typeof(ConsumtionHistoryComponent),
         typeof(ElixirComponent),
+        typeof(JumpInTimeComponent),
+        typeof(LogicSystemsComponent),
         typeof(PauseComponent),
         typeof(TickComponent)
     };

@@ -16,6 +16,8 @@ public class RootSystemBehaviour : MonoBehaviour
 		var logicSystems = CreateLogicSystems();
 
 		_systems = new Systems();
+		_systems.Add(Pools.pool.CreateSystem<ReplaySystem>());
+		_systems.Add(Pools.pool.CreateSystem<CleanupConsumtionHistorySystem>());
 		_systems.Add(logicSystems);
 		_systems.Initialize();
 	}
@@ -23,10 +25,15 @@ public class RootSystemBehaviour : MonoBehaviour
 	Systems CreateLogicSystems()
 	{
 		var pool = Pools.pool;
-		return new Systems()
-			.Add(pool.CreateSystem<TickUpdateSystem>())
+		if(!pool.hasLogicSystems){
+			pool.SetLogicSystems(new Systems()
+				.Add(pool.CreateSystem<TickUpdateSystem>())
 				.Add(pool.CreateSystem<ElixirProduceSystem>())
-				.Add(pool.CreateSystem<ElixirConsumeSystem>());
+				.Add(pool.CreateSystem<ElixirConsumeSystem>())
+				.Add(pool.CreateSystem<ElixirConsumePersistSystem>())
+				.Add(pool.CreateSystem<ElixirConsumeCleanupSystem>()));
+		}
+		return pool.logicSystems.systems;
 	}
 
 	// Update is called once per frame
