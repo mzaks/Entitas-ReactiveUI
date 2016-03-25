@@ -1,16 +1,14 @@
 ﻿using UnityEngine;
-using System.Collections;
 using Entitas;
 
 public class RootSystemBehaviour : MonoBehaviour
 {
-  private Systems _systems;
+  Systems _systems;
 
     void Awake() {
         Application.targetFrameRate = 60;
 	}
 	
-	// Use this for initialization
 	void Start ()
 	{
 		var logicSystems = CreateLogicSystems();
@@ -18,7 +16,11 @@ public class RootSystemBehaviour : MonoBehaviour
 		_systems = new Systems();
 		_systems.Add(Pools.pool.CreateSystem<ReplaySystem>());
 		_systems.Add(Pools.pool.CreateSystem<CleanupConsumtionHistorySystem>());
+		_systems.Add(Pools.pool.CreateSystem<NotifyTickListenersSystem>());
+		_systems.Add(Pools.pool.CreateSystem<NotifyPauseListenersSystem>());
+		_systems.Add(Pools.pool.CreateSystem<NotifyElixirListenersSystem>());
 		_systems.Add(logicSystems);
+
 		_systems.Initialize();
 	}
 
@@ -36,7 +38,6 @@ public class RootSystemBehaviour : MonoBehaviour
 		return pool.logicSystems.systems;
 	}
 
-	// Update is called once per frame
 	void Update () {
         _systems.Execute();
 	}

@@ -1,22 +1,18 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
-using Entitas;
 
-public class ElixirBarBehaviour : MonoBehaviour {
+public class ElixirBarBehaviour : MonoBehaviour, IElixirListener {
 
 	float maxWidth;
 
 	void Start () {
 		maxWidth = GetComponent<RectTransform>().rect.width;
-		Pools.pool.GetGroup(Matcher.Elixir).OnEntityAdded += delegate {updateBar();};
+		Pools.pool.CreateEntity().AddElixirListener(this);
 	}
-	
-	void updateBar(){
+
+	public void ElixirAmountChanged ()
+	{
 		var ratio = Pools.pool.elixir.amount / ElixirProduceSystem.ElixirCapacity;
 		GetComponent<RectTransform>().sizeDelta = new Vector2(maxWidth * ratio, GetComponent<RectTransform>().rect.height);
 	}
-	
-//	void Update () {
-//	
-//	}
+
 }

@@ -1,21 +1,17 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using Entitas;
 
-public class ElixirAmountBehaviour : MonoBehaviour {
+public class ElixirAmountBehaviour : MonoBehaviour, IElixirListener {
 
-	// Use this for initialization
 	void Start () {
-		Pools.pool.GetGroup(Matcher.Elixir).OnEntityAdded += delegate {updateText();};
+		Pools.pool.CreateEntity().AddElixirListener(this);
 	}
 
-	void updateText(){
+	public void ElixirAmountChanged ()
+	{
 		var label = GetComponent<Text>();
 		label.text = ((int)Pools.pool.elixir.amount).ToString();
 		label.color = System.Math.Abs (Pools.pool.elixir.amount - ElixirProduceSystem.ElixirCapacity) < Mathf.Epsilon ? Color.red : Color.black;
 	}
-	
-//	void Update () {
-//	
-//	}
+
 }

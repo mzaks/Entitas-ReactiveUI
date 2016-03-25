@@ -52,3 +52,28 @@ public class LogicSystemsComponent : IComponent
 {
 	public Systems systems;
 }
+
+
+public interface ITickListener {
+	void TickChanged();
+}
+
+public class TickListenerComponent : IComponent {
+	public ITickListener listener;
+}
+
+public interface IPauseListener {
+	void PauseStateChanged();
+}
+
+public class PauseListenerComponent : IComponent {
+	public IPauseListener listener;
+}
+
+public interface IElixirListener {
+	void ElixirAmountChanged();
+}
+
+public class ElixirListenerComponent : IComponent {
+	public IElixirListener listener;
+}

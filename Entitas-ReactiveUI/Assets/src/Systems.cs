@@ -168,3 +168,63 @@ public class CleanupConsumtionHistorySystem : IReactiveSystem, ISetPool, IExclud
 
 	public IMatcher excludeComponents { get { return Matcher.Pause; } }
 }
+
+public class NotifyTickListenersSystem : IReactiveSystem, ISetPool
+{
+	Pool _pool;
+	Group listeners;
+
+	public void Execute(List<Entity> entities)
+	{
+		foreach (var entity in listeners.GetEntities()) {
+			entity.tickListener.listener.TickChanged();
+		}
+	}
+
+	public TriggerOnEvent trigger { get { return Matcher.Tick.OnEntityAddedOrRemoved();}}
+
+	public void SetPool(Pool pool){
+		_pool = pool;
+		listeners = _pool.GetGroup(Matcher.TickListener);
+	}
+}
+
+public class NotifyPauseListenersSystem : IReactiveSystem, ISetPool
+{
+	Pool _pool;
+	Group listeners;
+	
+	public void Execute(List<Entity> entities)
+	{
+		foreach (var entity in listeners.GetEntities()) {
+			entity.pauseListener.listener.PauseStateChanged();
+		}
+	}
+	
+	public TriggerOnEvent trigger { get { return Matcher.Pause.OnEntityAddedOrRemoved();}}
+	
+	public void SetPool(Pool pool){
+		_pool = pool;
+		listeners = _pool.GetGroup(Matcher.PauseListener);
+	}
+}
+
+public class NotifyElixirListenersSystem : IReactiveSystem, ISetPool
+{
+	Pool _pool;
+	Group listeners;
+	
+	public void Execute(List<Entity> entities)
+	{
+		foreach (var entity in listeners.GetEntities()) {
+			entity.elixirListener.listener.ElixirAmountChanged();
+		}
+	}
+	
+	public TriggerOnEvent trigger { get { return Matcher.Elixir.OnEntityAddedOrRemoved();}}
+	
+	public void SetPool(Pool pool){
+		_pool = pool;
+		listeners = _pool.GetGroup(Matcher.ElixirListener);
+	}
+}

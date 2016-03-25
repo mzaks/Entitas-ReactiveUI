@@ -1,17 +1,15 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using Entitas;
 
-public class TimePickerBehaviour : MonoBehaviour {
+public class TimePickerBehaviour : MonoBehaviour, IPauseListener {
 
 	void Start () 
 	{
-		Pools.pool.GetGroup(Matcher.Pause).OnEntityAdded += delegate {toggleState();};
-		Pools.pool.GetGroup(Matcher.Pause).OnEntityRemoved += delegate {toggleState();};
-		toggleState();
+		Pools.pool.CreateEntity().AddPauseListener(this);
+		PauseStateChanged();
 	}
 
-	void toggleState ()
+	public void PauseStateChanged ()
 	{
 		gameObject.SetActive(Pools.pool.isPause);
 		if(Pools.pool.hasTick){
