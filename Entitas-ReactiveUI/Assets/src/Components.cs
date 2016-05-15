@@ -9,42 +9,42 @@ public class TickComponent : IComponent
 }
 
 [SingleEntity]
+public class ElixirComponent : IComponent
+{
+	public float amount;
+}
+	
+public class ConsumeElixirComponent : IComponent
+{
+  public int amount;
+}
+
+[SingleEntity]
+public class PauseComponent : IComponent {}
+
+[SingleEntity]
 public class JumpInTimeComponent : IComponent
 {
 	public long targetTick;
 }
 
 
-[SingleEntity]
-public class ElixirComponent : IComponent
+public class ConsumtionEntry
 {
-  public float amount;
-}
+	public readonly long tick;
+	public readonly int amount;
 
-[SingleEntity]
-public class PauseComponent : IComponent {}
-
-public class ConsumeComponent : IComponent
-{
-  public int amount;
-}
-
-
-public class ConsumptionEntry
-{
-	public ConsumptionEntry(long tick, int amount)
+	public ConsumtionEntry(long tick, int amount)
 	{
 		this.tick = tick;
 		this.amount = amount;
 	}
-	public readonly long tick;
-	public readonly int amount;
 }
 
 [SingleEntity]
 public class ConsumtionHistoryComponent : IComponent
 {
-	public List<ConsumptionEntry> entires;
+	public List<ConsumtionEntry> entries;
 }
 
 [SingleEntity]
@@ -53,27 +53,17 @@ public class LogicSystemsComponent : IComponent
 	public Systems systems;
 }
 
-
-public interface ITickListener {
+[Pool]
+public interface TickListener {
 	void TickChanged();
 }
 
-public class TickListenerComponent : IComponent {
-	public ITickListener listener;
-}
-
-public interface IPauseListener {
+[Pool]
+public interface PauseListener {
 	void PauseStateChanged();
 }
-
-public class PauseListenerComponent : IComponent {
-	public IPauseListener listener;
-}
-
-public interface IElixirListener {
+	
+[Pool]
+public interface ElixirListener {
 	void ElixirAmountChanged();
-}
-
-public class ElixirListenerComponent : IComponent {
-	public IElixirListener listener;
 }

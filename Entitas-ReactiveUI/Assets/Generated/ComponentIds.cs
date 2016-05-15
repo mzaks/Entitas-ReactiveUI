@@ -7,24 +7,30 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 public static class ComponentIds {
-    public const int Consume = 0;
+    public const int ConsumeElixir = 0;
     public const int ConsumtionHistory = 1;
     public const int Elixir = 2;
     public const int ElixirListener = 3;
-    public const int JumpInTime = 4;
-    public const int LogicSystems = 5;
-    public const int Pause = 6;
-    public const int PauseListener = 7;
-    public const int Tick = 8;
-    public const int TickListener = 9;
+    public const int IElixirListener = 4;
+    public const int IPauseListener = 5;
+    public const int ITickListener = 6;
+    public const int JumpInTime = 7;
+    public const int LogicSystems = 8;
+    public const int Pause = 9;
+    public const int PauseListener = 10;
+    public const int Tick = 11;
+    public const int TickListener = 12;
 
-    public const int TotalComponents = 10;
+    public const int TotalComponents = 13;
 
     public static readonly string[] componentNames = {
-        "Consume",
+        "ConsumeElixir",
         "ConsumtionHistory",
         "Elixir",
         "ElixirListener",
+        "IElixirListener",
+        "IPauseListener",
+        "ITickListener",
         "JumpInTime",
         "LogicSystems",
         "Pause",
@@ -34,7 +40,7 @@ public static class ComponentIds {
     };
 
     public static readonly System.Type[] componentTypes = {
-        typeof(ConsumeComponent),
+        typeof(ConsumeElixirComponent),
         typeof(ConsumtionHistoryComponent),
         typeof(ElixirComponent),
         typeof(ElixirListenerComponent),

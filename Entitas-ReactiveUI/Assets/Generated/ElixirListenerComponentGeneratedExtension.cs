@@ -6,21 +6,27 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
+using Entitas;
+
+public class ElixirListenerComponent : IComponent {
+    public ElixirListener value;
+}
+
 namespace Entitas {
     public partial class Entity {
         public ElixirListenerComponent elixirListener { get { return (ElixirListenerComponent)GetComponent(ComponentIds.ElixirListener); } }
 
         public bool hasElixirListener { get { return HasComponent(ComponentIds.ElixirListener); } }
 
-        public Entity AddElixirListener(IElixirListener newListener) {
+        public Entity AddElixirListener(ElixirListener newValue) {
             var component = CreateComponent<ElixirListenerComponent>(ComponentIds.ElixirListener);
-            component.listener = newListener;
+            component.value = newValue;
             return AddComponent(ComponentIds.ElixirListener, component);
         }
 
-        public Entity ReplaceElixirListener(IElixirListener newListener) {
+        public Entity ReplaceElixirListener(ElixirListener newValue) {
             var component = CreateComponent<ElixirListenerComponent>(ComponentIds.ElixirListener);
-            component.listener = newListener;
+            component.value = newValue;
             ReplaceComponent(ComponentIds.ElixirListener, component);
             return this;
         }

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class ElixirAmountBehaviour : MonoBehaviour, IElixirListener {
+public class ElixirAmountBehaviour : MonoBehaviour, ElixirListener {
 
 	void Start () {
 		Pools.pool.CreateEntity().AddElixirListener(this);
@@ -11,7 +11,7 @@ public class ElixirAmountBehaviour : MonoBehaviour, IElixirListener {
 	{
 		var label = GetComponent<Text>();
 		label.text = ((int)Pools.pool.elixir.amount).ToString();
-		label.color = System.Math.Abs (Pools.pool.elixir.amount - ElixirProduceSystem.ElixirCapacity) < Mathf.Epsilon ? Color.red : Color.black;
+		label.color = System.Math.Abs (Pools.pool.elixir.amount - ProduceElixirSystem.ElixirCapacity) < Mathf.Epsilon ? Color.blue : Color.black;
 	}
 
 }

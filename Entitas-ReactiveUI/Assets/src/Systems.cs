@@ -20,19 +20,17 @@ public class TickUpdateSystem : IInitializeSystem, IExecuteSystem, ISetPool
 }
 
 
-public class ElixirProduceSystem : IReactiveSystem, ISetPool, IInitializeSystem
+public class ProduceElixirSystem : IInitializeSystem, IReactiveSystem, ISetPool
 {
   	Pool _pool;
-  	int count = 0;
 
   	// This should be inside of a config file
   	public const float ElixirCapacity = 10f;
-  	const int ProductionFrequency = 3;
   	const float ProductionStep = 0.01f;
 
-	public TriggerOnEvent trigger { get { return Matcher.Tick.OnEntityAdded();}}
+	public TriggerOnEvent trigger { get { return Matcher.Tick.OnEntityAdded(); }}
 	
-	public void SetPool(Pool pool){_pool = pool;}
+	public void SetPool(Pool pool){ _pool = pool; }
 
 	public void Initialize ()
 	{
@@ -41,66 +39,72 @@ public class ElixirProduceSystem : IReactiveSystem, ISetPool, IInitializeSystem
 
   	public void Execute(List<Entity> entities)
   	{
-    	if (count == 0)
-    	{
-      		var newAmount = Math.Min(ElixirCapacity, _pool.elixir.amount + ProductionStep);
-      		_pool.ReplaceElixir(newAmount);
-    	}
-    	count = ((count + 1) % ProductionFrequency);
+		var newAmount = _pool.elixir.amount + ProductionStep;
+		newAmount = Math.Min(ElixirCapacity, newAmount);
+      	_pool.ReplaceElixir(newAmount);
   	}
 }
 
-public class ElixirConsumeSystem : IReactiveSystem, ISetPool, IEnsureComponents
+public class ConsumeElixirSystem : IReactiveSystem, ISetPool, IEnsureComponents
 {
   	Pool _pool;
+
+	public TriggerOnEvent trigger { get { return Matcher.ConsumeElixir.OnEntityAdded();}}
+
+	public IMatcher ensureComponents { get { return Matcher.ConsumeElixir; }}
+
+	public void SetPool(Pool pool){ _pool = pool; }
 
 	public void Execute(List<Entity> entities)
 	{
 	    foreach (var entity in entities)
 	    {
-			if(entity.consume.amount > _pool.elixir.amount){
+			if(entity.consumeElixir.amount > _pool.elixir.amount){
 				UnityEngine.Debug.LogError("Consume more than produced. Should not happen");
 			}
-	        var newAmount = Math.Max(0, _pool.elixir.amount - entity.consume.amount);
+			var newAmount = Math.Max(0, _pool.elixir.amount - entity.consumeElixir.amount);
 	        _pool.ReplaceElixir(newAmount);
 	    }
 	}
-
-	public TriggerOnEvent trigger { get { return Matcher.Consume.OnEntityAdded();}}
-
-  	public void SetPool(Pool pool){_pool = pool;}
-
-  	public IMatcher ensureComponents { get { return Matcher.Consume; } }
 }
 
-public class ElixirConsumePersistSystem : IReactiveSystem, ISetPool, IEnsureComponents
+public class PersistConsumeElixirSystem : IReactiveSystem, ISetPool, IEnsureComponents
 {
 	Pool _pool;
+
+	public TriggerOnEvent trigger { get { return Matcher.ConsumeElixir.OnEntityAdded();}}
+
+	public IMatcher ensureComponents { get { return Matcher.ConsumeElixir; }}
+
+	public void SetPool(Pool pool){ _pool = pool; }
 	
 	public void Execute(List<Entity> entities)
 	{
 		if(_pool.isPause){
 			return;
 		}
-		var previousEntries = _pool.hasConsumtionHistory ? _pool.consumtionHistory.entires : new List<ConsumptionEntry>();
+		var previousEntries = 
+			_pool.hasConsumtionHistory ? _pool.consumtionHistory.entries : 
+											new List<ConsumtionEntry>();
 		foreach (var entity in entities)
 		{
-			previousEntries.Add(new ConsumptionEntry(_pool.tick.currentTick, entity.consume.amount));
-
+			previousEntries.Add(
+				new ConsumtionEntry(_pool.tick.currentTick, entity.consumeElixir.amount
+			));
 		}
 		_pool.ReplaceConsumtionHistory(previousEntries);
 	}
-	
-	public TriggerOnEvent trigger { get { return Matcher.Consume.OnEntityAdded();}}
-	
-	public void SetPool(Pool pool){_pool = pool;}
-	
-	public IMatcher ensureComponents { get { return Matcher.Consume; } }
 }
 
-public class ElixirConsumeCleanupSystem : IReactiveSystem, ISetPool, IEnsureComponents
+public class ConsumeElixirCleanupSystem : IReactiveSystem, ISetPool, IEnsureComponents
 {
 	Pool _pool;
+
+	public TriggerOnEvent trigger { get { return Matcher.ConsumeElixir.OnEntityAdded();}}
+
+	public IMatcher ensureComponents { get { return Matcher.ConsumeElixir; }}
+
+	public void SetPool(Pool pool){ _pool = pool; }
 	
 	public void Execute(List<Entity> entities)
 	{
@@ -109,48 +113,50 @@ public class ElixirConsumeCleanupSystem : IReactiveSystem, ISetPool, IEnsureComp
 			_pool.DestroyEntity(entity);
 		}
 	}
-	
-	public TriggerOnEvent trigger { get { return Matcher.Consume.OnEntityAdded();}}
-	
-	public void SetPool(Pool pool){_pool = pool;}
-	
-	public IMatcher ensureComponents { get { return Matcher.Consume; } }
 }
 
 public class ReplaySystem : IReactiveSystem, ISetPool, IEnsureComponents
 {
 	Pool _pool;
+
+	public TriggerOnEvent trigger { get { return Matcher.JumpInTime.OnEntityAdded(); }}
+
+	public void SetPool(Pool pool){ _pool = pool; }
+
+	public IMatcher ensureComponents { get { return Matcher.JumpInTime; }}
 	
 	public void Execute(List<Entity> entities)
 	{
 		var logicSystems = _pool.logicSystems.systems;
 		logicSystems.Initialize();
-		var actions = _pool.hasConsumtionHistory ? _pool.consumtionHistory.entires : new List<ConsumptionEntry>();
+		var actions = _pool.hasConsumtionHistory ? 
+						_pool.consumtionHistory.entries : 
+						new List<ConsumtionEntry>();
 		var actionIndex = 0;
 		for (int tick = 0; tick <= _pool.jumpInTime.targetTick; tick++) {
 			_pool.ReplaceTick(tick);
-			if(actions.Count > actionIndex && actions[actionIndex].tick == tick){
-				_pool.CreateEntity().AddConsume(actions[actionIndex].amount);
+			if(actions.Count > actionIndex && actions[actionIndex].tick == tick) {
+				_pool.CreateEntity().AddConsumeElixir(actions[actionIndex].amount);
 				actionIndex++;
 			}
 			logicSystems.Execute();
 		}
 	}
-	
-	public TriggerOnEvent trigger { get { return Matcher.JumpInTime.OnEntityAdded();}}
-	
-	public void SetPool(Pool pool){_pool = pool;}
-	
-	public IMatcher ensureComponents { get { return Matcher.JumpInTime; } }
 }
 
 public class CleanupConsumtionHistorySystem : IReactiveSystem, ISetPool, IExcludeComponents
 {
 	Pool _pool;
+
+	public TriggerOnEvent trigger { get { return Matcher.Pause.OnEntityRemoved(); }}
+
+	public void SetPool(Pool pool){ _pool = pool; }
+
+	public IMatcher excludeComponents { get { return Matcher.Pause; }}
 	
 	public void Execute(List<Entity> entities)
 	{
-		var actions = _pool.hasConsumtionHistory ? _pool.consumtionHistory.entires : new List<ConsumptionEntry>();
+		var actions = _pool.hasConsumtionHistory ? _pool.consumtionHistory.entries : new List<ConsumtionEntry>();
 		int count = 0;
 		for (int index = actions.Count-1; index >= 0; index--) {
 			if(actions[index].tick>_pool.tick.currentTick){
@@ -161,12 +167,6 @@ public class CleanupConsumtionHistorySystem : IReactiveSystem, ISetPool, IExclud
 		}
 		actions.RemoveRange(actions.Count - count, count);
 	}
-	
-	public TriggerOnEvent trigger { get { return Matcher.Pause.OnEntityRemoved();}}
-	
-	public void SetPool(Pool pool){_pool = pool;}
-
-	public IMatcher excludeComponents { get { return Matcher.Pause; } }
 }
 
 public class NotifyTickListenersSystem : IReactiveSystem, ISetPool
@@ -174,18 +174,18 @@ public class NotifyTickListenersSystem : IReactiveSystem, ISetPool
 	Pool _pool;
 	Group listeners;
 
-	public void Execute(List<Entity> entities)
-	{
-		foreach (var entity in listeners.GetEntities()) {
-			entity.tickListener.listener.TickChanged();
-		}
-	}
-
-	public TriggerOnEvent trigger { get { return Matcher.Tick.OnEntityAddedOrRemoved();}}
+	public TriggerOnEvent trigger { get { return Matcher.Tick.OnEntityAddedOrRemoved(); }}
 
 	public void SetPool(Pool pool){
 		_pool = pool;
 		listeners = _pool.GetGroup(Matcher.TickListener);
+	}
+
+	public void Execute(List<Entity> entities)
+	{
+		foreach (var entity in listeners.GetEntities()) {
+			entity.tickListener.value.TickChanged();
+		}
 	}
 }
 
@@ -193,19 +193,19 @@ public class NotifyPauseListenersSystem : IReactiveSystem, ISetPool
 {
 	Pool _pool;
 	Group listeners;
+
+	public TriggerOnEvent trigger { get { return Matcher.Pause.OnEntityAddedOrRemoved(); }}
+
+	public void SetPool(Pool pool){
+		_pool = pool;
+		listeners = _pool.GetGroup(Matcher.PauseListener);
+	}
 	
 	public void Execute(List<Entity> entities)
 	{
 		foreach (var entity in listeners.GetEntities()) {
-			entity.pauseListener.listener.PauseStateChanged();
+			entity.pauseListener.value.PauseStateChanged();
 		}
-	}
-	
-	public TriggerOnEvent trigger { get { return Matcher.Pause.OnEntityAddedOrRemoved();}}
-	
-	public void SetPool(Pool pool){
-		_pool = pool;
-		listeners = _pool.GetGroup(Matcher.PauseListener);
 	}
 }
 
@@ -213,18 +213,18 @@ public class NotifyElixirListenersSystem : IReactiveSystem, ISetPool
 {
 	Pool _pool;
 	Group listeners;
+
+	public TriggerOnEvent trigger { get { return Matcher.Elixir.OnEntityAddedOrRemoved(); }}
+
+	public void SetPool(Pool pool) {
+		_pool = pool;
+		listeners = _pool.GetGroup(Matcher.ElixirListener);
+	}
 	
 	public void Execute(List<Entity> entities)
 	{
 		foreach (var entity in listeners.GetEntities()) {
-			entity.elixirListener.listener.ElixirAmountChanged();
+			entity.elixirListener.value.ElixirAmountChanged();
 		}
-	}
-	
-	public TriggerOnEvent trigger { get { return Matcher.Elixir.OnEntityAddedOrRemoved();}}
-	
-	public void SetPool(Pool pool){
-		_pool = pool;
-		listeners = _pool.GetGroup(Matcher.ElixirListener);
 	}
 }

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class TimeLabelBehaviour : MonoBehaviour, ITickListener {
+public class TimeLabelBehaviour : MonoBehaviour, TickListener {
 
 	void Awake ()
 	{

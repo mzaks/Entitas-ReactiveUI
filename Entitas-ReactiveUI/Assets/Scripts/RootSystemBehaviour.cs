@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using Entitas;
+using Entitas.Unity.VisualDebugging;
 
 public class RootSystemBehaviour : MonoBehaviour
 {
@@ -13,7 +14,7 @@ public class RootSystemBehaviour : MonoBehaviour
 	{
 		var logicSystems = CreateLogicSystems();
 
-		_systems = new Systems();
+		_systems = new Feature("Root Systems");
 		_systems.Add(Pools.pool.CreateSystem<ReplaySystem>());
 		_systems.Add(Pools.pool.CreateSystem<CleanupConsumtionHistorySystem>());
 		_systems.Add(Pools.pool.CreateSystem<NotifyTickListenersSystem>());
@@ -28,12 +29,12 @@ public class RootSystemBehaviour : MonoBehaviour
 	{
 		var pool = Pools.pool;
 		if(!pool.hasLogicSystems){
-			pool.SetLogicSystems(new Systems()
+			pool.SetLogicSystems(new Feature("Logic Systems")
 				.Add(pool.CreateSystem<TickUpdateSystem>())
-				.Add(pool.CreateSystem<ElixirProduceSystem>())
-				.Add(pool.CreateSystem<ElixirConsumeSystem>())
-				.Add(pool.CreateSystem<ElixirConsumePersistSystem>())
-				.Add(pool.CreateSystem<ElixirConsumeCleanupSystem>()));
+				.Add(pool.CreateSystem<ProduceElixirSystem>())
+				.Add(pool.CreateSystem<ConsumeElixirSystem>())
+				.Add(pool.CreateSystem<PersistConsumeElixirSystem>())
+				.Add(pool.CreateSystem<ConsumeElixirCleanupSystem>()));
 		}
 		return pool.logicSystems.systems;
 	}

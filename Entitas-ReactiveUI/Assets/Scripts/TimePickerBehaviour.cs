@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class TimePickerBehaviour : MonoBehaviour, IPauseListener {
+public class TimePickerBehaviour : MonoBehaviour, PauseListener {
 
 	void Start () 
 	{

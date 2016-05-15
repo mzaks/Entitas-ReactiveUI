@@ -12,15 +12,15 @@ namespace Entitas {
 
         public bool hasConsumtionHistory { get { return HasComponent(ComponentIds.ConsumtionHistory); } }
 
-        public Entity AddConsumtionHistory(System.Collections.Generic.List<ConsumptionEntry> newEntires) {
+        public Entity AddConsumtionHistory(System.Collections.Generic.List<ConsumtionEntry> newEntries) {
             var component = CreateComponent<ConsumtionHistoryComponent>(ComponentIds.ConsumtionHistory);
-            component.entires = newEntires;
+            component.entries = newEntries;
             return AddComponent(ComponentIds.ConsumtionHistory, component);
         }
 
-        public Entity ReplaceConsumtionHistory(System.Collections.Generic.List<ConsumptionEntry> newEntires) {
+        public Entity ReplaceConsumtionHistory(System.Collections.Generic.List<ConsumtionEntry> newEntries) {
             var component = CreateComponent<ConsumtionHistoryComponent>(ComponentIds.ConsumtionHistory);
-            component.entires = newEntires;
+            component.entries = newEntries;
             ReplaceComponent(ComponentIds.ConsumtionHistory, component);
             return this;
         }
@@ -37,22 +37,22 @@ namespace Entitas {
 
         public bool hasConsumtionHistory { get { return consumtionHistoryEntity != null; } }
 
-        public Entity SetConsumtionHistory(System.Collections.Generic.List<ConsumptionEntry> newEntires) {
+        public Entity SetConsumtionHistory(System.Collections.Generic.List<ConsumtionEntry> newEntries) {
             if (hasConsumtionHistory) {
                 throw new EntitasException("Could not set consumtionHistory!\n" + this + " already has an entity with ConsumtionHistoryComponent!",
                     "You should check if the pool already has a consumtionHistoryEntity before setting it or use pool.ReplaceConsumtionHistory().");
             }
             var entity = CreateEntity();
-            entity.AddConsumtionHistory(newEntires);
+            entity.AddConsumtionHistory(newEntries);
             return entity;
         }
 
-        public Entity ReplaceConsumtionHistory(System.Collections.Generic.List<ConsumptionEntry> newEntires) {
+        public Entity ReplaceConsumtionHistory(System.Collections.Generic.List<ConsumtionEntry> newEntries) {
             var entity = consumtionHistoryEntity;
             if (entity == null) {
-                entity = SetConsumtionHistory(newEntires);
+                entity = SetConsumtionHistory(newEntries);
             } else {
-                entity.ReplaceConsumtionHistory(newEntires);
+                entity.ReplaceConsumtionHistory(newEntries);
             }
 
             return entity;

@@ -6,21 +6,27 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
+using Entitas;
+
+public class PauseListenerComponent : IComponent {
+    public PauseListener value;
+}
+
 namespace Entitas {
     public partial class Entity {
         public PauseListenerComponent pauseListener { get { return (PauseListenerComponent)GetComponent(ComponentIds.PauseListener); } }
 
         public bool hasPauseListener { get { return HasComponent(ComponentIds.PauseListener); } }
 
-        public Entity AddPauseListener(IPauseListener newListener) {
+        public Entity AddPauseListener(PauseListener newValue) {
             var component = CreateComponent<PauseListenerComponent>(ComponentIds.PauseListener);
-            component.listener = newListener;
+            component.value = newValue;
             return AddComponent(ComponentIds.PauseListener, component);
         }
 
-        public Entity ReplacePauseListener(IPauseListener newListener) {
+        public Entity ReplacePauseListener(PauseListener newValue) {
             var component = CreateComponent<PauseListenerComponent>(ComponentIds.PauseListener);
-            component.listener = newListener;
+            component.value = newValue;
             ReplaceComponent(ComponentIds.PauseListener, component);
             return this;
         }

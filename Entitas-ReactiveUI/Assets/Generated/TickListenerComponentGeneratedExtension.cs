@@ -6,21 +6,27 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
+using Entitas;
+
+public class TickListenerComponent : IComponent {
+    public TickListener value;
+}
+
 namespace Entitas {
     public partial class Entity {
         public TickListenerComponent tickListener { get { return (TickListenerComponent)GetComponent(ComponentIds.TickListener); } }
 
         public bool hasTickListener { get { return HasComponent(ComponentIds.TickListener); } }
 
-        public Entity AddTickListener(ITickListener newListener) {
+        public Entity AddTickListener(TickListener newValue) {
             var component = CreateComponent<TickListenerComponent>(ComponentIds.TickListener);
-            component.listener = newListener;
+            component.value = newValue;
             return AddComponent(ComponentIds.TickListener, component);
         }
 
-        public Entity ReplaceTickListener(ITickListener newListener) {
+        public Entity ReplaceTickListener(TickListener newValue) {
             var component = CreateComponent<TickListenerComponent>(ComponentIds.TickListener);
-            component.listener = newListener;
+            component.value = newValue;
             ReplaceComponent(ComponentIds.TickListener, component);
             return this;
         }
