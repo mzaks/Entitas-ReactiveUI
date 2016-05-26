@@ -6,9 +6,9 @@ public class ElixirBarBehaviour : MonoBehaviour, ElixirListener {
 		Pools.pool.CreateEntity().AddElixirListener(this);
 	}
 
-	public void ElixirAmountChanged ()
+	public void ElixirAmountChanged (float amount)
 	{
-		var ratio = Pools.pool.elixir.amount / ProduceElixirSystem.ElixirCapacity;
+		var ratio = amount / ProduceElixirSystem.ElixirCapacity;
 		GetComponent<RectTransform>().localScale = new Vector3(ratio, 1f, 1f);
 	}
 

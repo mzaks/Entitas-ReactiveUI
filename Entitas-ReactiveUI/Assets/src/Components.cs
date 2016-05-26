@@ -55,15 +55,15 @@ public class LogicSystemsComponent : IComponent
 
 [Pool]
 public interface TickListener {
-	void TickChanged();
+	void TickChanged(long currentTick);
 }
 
 [Pool]
 public interface PauseListener {
-	void PauseStateChanged();
+	void PauseStateChanged(bool isPaused);
 }
 	
 [Pool]
 public interface ElixirListener {
-	void ElixirAmountChanged();
+	void ElixirAmountChanged(float amount);
 }

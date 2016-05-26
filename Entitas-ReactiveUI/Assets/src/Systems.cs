@@ -183,8 +183,9 @@ public class NotifyTickListenersSystem : IReactiveSystem, ISetPool
 
 	public void Execute(List<Entity> entities)
 	{
+		var e = entities[0];
 		foreach (var entity in listeners.GetEntities()) {
-			entity.tickListener.value.TickChanged();
+			entity.tickListener.value.TickChanged(e.tick.currentTick);
 		}
 	}
 }
@@ -203,8 +204,9 @@ public class NotifyPauseListenersSystem : IReactiveSystem, ISetPool
 	
 	public void Execute(List<Entity> entities)
 	{
+		var e = entities[0];
 		foreach (var entity in listeners.GetEntities()) {
-			entity.pauseListener.value.PauseStateChanged();
+			entity.pauseListener.value.PauseStateChanged(e.isPause);
 		}
 	}
 }
@@ -223,8 +225,9 @@ public class NotifyElixirListenersSystem : IReactiveSystem, ISetPool
 	
 	public void Execute(List<Entity> entities)
 	{
+		var e = entities[0];
 		foreach (var entity in listeners.GetEntities()) {
-			entity.elixirListener.value.ElixirAmountChanged();
+			entity.elixirListener.value.ElixirAmountChanged(e.elixir.amount);
 		}
 	}
 }

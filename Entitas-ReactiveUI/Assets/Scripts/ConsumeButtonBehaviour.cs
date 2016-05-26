@@ -16,14 +16,14 @@ public class ConsumeButtonBehaviour : MonoBehaviour, PauseListener, ElixirListen
 		Pools.pool.CreateEntity().AddPauseListener(this).AddElixirListener(this);
 	}
 
-	public void PauseStateChanged ()
+	public void PauseStateChanged (bool isPaused)
 	{
-		GetComponent<Button>().enabled = !Pools.pool.isPause;
+		GetComponent<Button>().enabled = !isPaused;
 	}
 
-	public void ElixirAmountChanged ()
+	public void ElixirAmountChanged (float amount)
 	{
-		var ratio = 1 - Mathf.Min(1f, (Pools.pool.elixir.amount / (float)consumtionAmmount));
+		var ratio = 1 - Mathf.Min(1f, (amount / (float)consumtionAmmount));
 		progressBox.fillAmount = ratio;
 		GetComponent<Button>().enabled = (System.Math.Abs (ratio - 0) < Mathf.Epsilon);
 	}

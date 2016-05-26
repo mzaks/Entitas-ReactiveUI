@@ -6,12 +6,12 @@ public class TimePickerBehaviour : MonoBehaviour, PauseListener {
 	void Start () 
 	{
 		Pools.pool.CreateEntity().AddPauseListener(this);
-		PauseStateChanged();
+		PauseStateChanged(Pools.pool.isPause);
 	}
 
-	public void PauseStateChanged ()
+	public void PauseStateChanged (bool isPaused)
 	{
-		gameObject.SetActive(Pools.pool.isPause);
+		gameObject.SetActive(isPaused);
 		if(Pools.pool.hasTick){
 			var slider = GetComponent<Slider>();
 			slider.maxValue = Pools.pool.tick.currentTick;

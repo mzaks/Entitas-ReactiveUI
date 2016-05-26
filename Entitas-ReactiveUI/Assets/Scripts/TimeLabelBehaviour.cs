@@ -8,9 +8,9 @@ public class TimeLabelBehaviour : MonoBehaviour, TickListener {
 		Pools.pool.CreateEntity().AddTickListener(this);
 	}
 
-	public void TickChanged ()
+	public void TickChanged (long currentTick)
 	{
-		var tick = Pools.pool.tick.currentTick;
+		var tick = currentTick;
 		var sec = (tick / 60) % 60;
 		var min = (tick / 3600);
 		var secText = sec > 9 ? "" + sec : "0" + sec;
